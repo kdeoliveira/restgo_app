@@ -1,5 +1,6 @@
 <template>
   <v-app>
+
     <v-layout>
       <v-app-bar
           color="primary"
@@ -10,9 +11,7 @@
           ></v-img>
         </template>
 
-        <template v-slot:prepend>
-          <v-app-bar-nav-icon></v-app-bar-nav-icon>
-        </template>
+        
 
         <v-app-bar-title>REST APP</v-app-bar-title>
 
@@ -24,7 +23,9 @@
       </v-app-bar>
 
       <v-main>
-        <router-view></router-view>
+        <v-container fluid>
+          <router-view></router-view>
+        </v-container>
       </v-main>
     </v-layout>
   </v-app>
@@ -40,6 +41,7 @@ const handlerOnRefresh = () => {
   console.log(currentTimeStore.getLocale)
   currentTimeStore.fetchCurrentTime(currentTimeStore.getLocale)
 }
+
 
 </script>
 

@@ -47,9 +47,15 @@ const internal_fetch = async (url: string, method: "get" | "post" | "delete", op
 
     const timeout = options.timeout ? setTimeout(() => controller.abort(), options.timeout) : null;
     try {
-        const API_HOST="http://127.0.0.1:8000"
+        
+
+        if (!import.meta.env["VITE_API_HOST"]){
+            throw new Error("No api host defined")
+        }
+        const API_HOST= import.meta.env.VITE_API_HOST 
         str = API_HOST.concat(str)
         console.log(str)
+        //https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal
         const x = await fetch(str, {
             method: method,
             credentials: options.credentials ? "include" : "omit",
@@ -59,6 +65,7 @@ const internal_fetch = async (url: string, method: "get" | "post" | "delete", op
                 ...options.headers,
                 // "xsrf-token": method === "post" ? csrf.token : ""
             },
+            //@ts-ignore
             signal: timeout ? controller.signal : undefined,
             body: JSON.stringify(options.body),
 

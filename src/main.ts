@@ -7,6 +7,8 @@ import {createPinia} from "pinia";
 
 loadFonts()
 
+
+
 createApp(App)
   .use(router)
   .use(vuetify)
