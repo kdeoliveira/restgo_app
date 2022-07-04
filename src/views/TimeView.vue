@@ -18,8 +18,7 @@
     </v-card-text>
     <v-card-actions>
       <v-btn @click="() => {
-        useCurrentTime.setLocale(selected)
-        useCurrentTime.fetchCurrentTime(selected)
+        useCurrentTime.setDefaultLocale(selected)
       }">
         Fetch
       </v-btn>
@@ -32,27 +31,31 @@
 
 <script lang="ts" setup>
 // Components
+import ApiService from "@/service";
 import useCurrentTimeStore from "@/stores";
 
-import { ref, onMounted } from "vue";
+import { ref, watchEffect } from "vue";
 
 const useCurrentTime = useCurrentTimeStore()
 
+const items = ref<string[]>([])
 
-
-const items = ref([
-  "en_US",
-  "fr_FR",
-  "pt_PT",
-  "es_ES"
-])
+const selected = ref<string>("")
 
 
 
-const selected = ref<string>(useCurrentTime.getLocale)
-
-onMounted(() => {
-  useCurrentTime.fetchCurrentTime(useCurrentTime.getLocale)
+watchEffect(() => {
+    ApiService.fetchCurrentTime("time", useCurrentTime.getCurrentLocale).then(
+      (x) => {
+        selected.value = useCurrentTime.getCurrentLocale
+        items.value = useCurrentTime.getAllLocale
+        useCurrentTime.setDateTime(x.time, x.date)
+      }
+    ).catch(
+      (e) => {
+        console.error(e)
+      }
+    )
 })
 
 </script>

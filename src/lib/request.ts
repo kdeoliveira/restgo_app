@@ -52,9 +52,7 @@ const internal_fetch = async (url: string, method: "get" | "post" | "delete", op
         if (!import.meta.env["VITE_API_HOST"]){
             throw new Error("No api host defined")
         }
-        const API_HOST= import.meta.env.VITE_API_HOST 
-        str = API_HOST.concat(str)
-        console.log(str)
+        
         //https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal
         const x = await fetch(str, {
             method: method,

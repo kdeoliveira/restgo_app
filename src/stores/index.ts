@@ -1,52 +1,48 @@
 import {defineStore} from "pinia";
-import request from "@/lib/request";
 
 
 export interface CurrentTime{
-    locale: string,
+    locale: {default: string, all: string[]},
     time: string | null,
     date: string | null
 }
 
 const useCurrentTimeStore = defineStore('currentTime', {
     state: () : CurrentTime => ({
-        locale: "en_US",
+        locale: {
+            default: "",
+            all: []
+        },
         time: null,
         date: null
     }),
 
     getters: {
-        getLocale: (state) : string => state.locale,
+        getCurrentLocale: (state) : string => state.locale.default,
+        getAllLocale: (state) : string[] => state.locale.all,
         getTime: (state) : string | null => state.time,
         getDate: (state) : string | null => state.date
     },
 
     actions: {
-        setLocale(locale : string){
-            this.locale = locale
+        setDefaultLocale(locale : string){
+            this.locale = {
+                ...this.locale,
+                default: locale
+            }
         },
 
-        async fetchCurrentTime(locale : string) {
-            this.locale = locale
-            try {
-                const x = await request.get("/time", {
-                    query: {
-                        locale: locale
-                    },
-                    credentials: true
-                });
-                console.log(x)
-
-                if(x.valid){
-                    this.time = x.result.time
-                    this.date = x.result.date
-                }
-            } catch (e: any) {
-                this.time = null,
-                this.locale = "en_US"
+        setAllLocale(locales : string[]){
+            this.locale = {
+                ...this.locale,
+                all: locales
             }
+        },
+        setDateTime(time: string, date : string){
+            this.time = time
+            this.date = date
         }
     }
 })
 
-export default useCurrentTimeStore;
+export default useCurrentTimeStore
